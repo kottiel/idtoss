@@ -22,13 +22,18 @@
 #define MAX_CHARS                      526
 #define MAX_FILENAMELEN                 31
 #define MATNR                      "Z2BTMH"
-#define LABEL                       Z2BTLH
-#define TDLINE                      Z2BTTX
-#define DESCR                       Z2BTLC
+#define LABEL                      "Z2BTLH"
+#define TDLINE                     "Z2BTTX"
+#define DESCR                      "Z2BTLC"
+#define LABEL_START                     63
+#define LABEL_CODE_START                82
+#define TDLINE_START                    92
 
 #define MAX_COLUMNS          1000
+#define TDLINE_LEN            131
 #define MED                    30
 #define LRG                    41
+#define SML                    10
 #define MATERIAL_REC          "02"
 #define LABEL_REC             "03"
 #define TDLINE_REC            "04"
@@ -203,7 +208,7 @@ char* stristr( const char* str1, const char* str2 );
 /**
  */
 int populate(FILE *fpin, Label_record *lp, Column_header *cols);
-bool is_matnr(char *str);
+bool is_matrec(char *str);
 
 #endif //LABEL_H
 #endif //IDTOSS_LABEL_H

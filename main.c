@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
 {
     FILE *fpin, *fpout;
     char *textfile = (char *)malloc((int)strlen(argv[1]) * sizeof(char) + FN_SUFFIX);
+    int line = 0;
 
     // the spreadsheet column headings
     Column_header columns;
@@ -36,21 +37,24 @@ int main(int argc, char *argv[])
 
     char *sp = stristr (argv[1], "_IDoc");
     if (sp) {
-        int ipos = sp - argv[1];
-        strncpy(textfile, argv[1], ipos);
+        int ipos = (int)(sp - argv[1]);
+        strncpy(textfile, argv[1], (size_t)ipos);
         textfile[ipos] = '\0';
         strcat(textfile, ".txt");
     } else {
-        strncpy(textfile, argv[1], (int)(strlen(argv[1]) - 4));
+        strncpy(textfile, argv[1], (size_t)(strlen(argv[1]) - 4));
         textfile[(int)(strlen(argv[1]) - 4)] = '\0';
         strcat(textfile, "_dlmtd.txt");
     }
     fpout = fopen(textfile, "w");
 
-    labels[0] = (Label_record *)malloc(sizeof(Label_record));
-    if (!populate(fpin, labels[0], &columns) == 0)
+    labels[line] = (Label_record *)malloc(sizeof(Label_record));
+    if (!populate(fpin, labels[line], &columns) == 0) {
+        printf("Error occurred on line %d of input file.\n", line);
         EXIT_FAILURE;
-    printf("%s\n", labels[0]->material);
+    }
+    printf("%s\n", labels[line]->material);
+    printf("%s\n", labels[line]->label);
 
 // read the file, building a columns instance
 //
