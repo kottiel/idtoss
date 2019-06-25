@@ -18,8 +18,14 @@
 #include <stdbool.h>
 
 /* the spreadsheet's initial capacity */
-#define INITIAL_CAP             3
-#define MAX_CHARS             526
+#define INITIAL_CAP                      3
+#define MAX_CHARS                      526
+#define MAX_FILENAMELEN                 31
+#define MATNR                      "Z2BTMH"
+#define LABEL                       Z2BTLH
+#define TDLINE                      Z2BTTX
+#define DESCR                       Z2BTLC
+
 #define MAX_COLUMNS          1000
 #define MED                    30
 #define LRG                    41
@@ -27,6 +33,7 @@
 #define LABEL_REC             "03"
 #define TDLINE_REC            "04"
 #define CHAR_REC              "04"
+
 
 #define TAB                  '\t'
 
@@ -187,47 +194,16 @@ typedef struct {
 } Column_header;
 
 /**
-    identifies the column headings in a line and assigns true values to the
-    elements in the Column_header struct that correspond to those elements.
-    @param buffer is a pointer to the column headings line
-    @param cols is a pointer to a Column_header struct
-    @return the number of column headings identified
+
 */
-int parse_spreadsheet(char *buffer, Label_record *labels, Column_header *cols);
+Column_header readheader(char *str);
+
+char* stristr( const char* str1, const char* str2 );
 
 /**
-    get_token dynamically allocates a text substring and copies the substring
-    of buffer that occurs before the next occurrence of the delimiter,
-    tab_str. It then removes that substring and delimiter from buffer. If there
-    is no substr to capture between delimiters, the returned substring is
-    empty.
+ */
+int populate(FILE *fpin, Label_record *lp, Column_header *cols);
+bool is_matnr(char *str);
 
-    Calling code is responsible for freeing the returned char pointer.
-
-    @param buffer contains the string being divided into tokens
-    @param tab_str is the one character delimiter
-    @return a pointer to a dynamically allocated char array
-*/
-char *get_token(char *buffer, char tab_str);
-
-int get_field_contents_from_row(char *contents, int i, int count, char tab_str);
-
-int peek_nth_token(int n, const char *buffer, char delimiter);
-
-int strncmpci(const char *str1, const char *str2, int num);
-
-int equals_yes(char *field);
-
-int equals_no(char *field);
-
-int spreadsheet_init();
-
-int spreadsheet_expand();
-
-void sort_labels(Label_record *labels);
-
-void swap_label_records(Label_record *labels, int i, int min_index);
-
-#endif
-
+#endif //LABEL_H
 #endif //IDTOSS_LABEL_H
