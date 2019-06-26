@@ -74,6 +74,12 @@ int labels_append(Label_record *newlabel) {
     return 0;
 }
 
+/**
+ * search a string for the existence of a substr - case insensitive.
+ * @param str1 is the string that is being searched
+ * @param str2 is the substring that we're searching for
+ * @return the position of the
+ */
 char *stristr(const char *str1, const char *str2) {
     const char *p1 = str1;
     const char *p2 = str2;
@@ -153,14 +159,29 @@ bool is_matrec(char *str) {
     return (strncmp(str, MATNR, 6) == 0);
 }
 
+/**
+ * a boolean function to check whether an IDOC record is a label record
+ * @param str is the line of the input file being checked
+ * @return true if the control portion contains the LABEL macro value
+ */
 bool is_lblrec(char *str) {
     return (strncmp(str, LABEL, 6) == 0);
 }
 
+/**
+ * a boolean function to check whether an IDOC record is a tdline record
+ * @param str is the line of the input file being checked
+ * @return true if the control portion contains the TDLINE macro value
+ */
 bool is_tdlinerec(char *str) {
     return (strncmp(str, TDLINE, 6) == 0);
 }
 
+/**
+ * a boolean function to check whether an IDOC record is a description record
+ * @param str is the line of the input file being checked
+ * @return true if the control portion contains the DESCR macro value
+ */
 bool is_descrec(char *str) {
     return (strncmp(str, DESCR, 6) == 0);
 }
