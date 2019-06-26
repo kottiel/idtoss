@@ -17,8 +17,8 @@
 
 #include <stdbool.h>
 
-/* the spreadsheet's initial capacity */
-#define INITIAL_CAP                      3
+/** Number of rules initially in policy          */
+#define LABELS_INIT_SIZE                 5
 #define MAX_CHARS                      526
 #define MAX_FILENAMELEN                 31
 #define MATNR                      "Z2BTMH"
@@ -50,11 +50,6 @@
 
 
 #define TAB                  '\t'
-
-/** global variable spreadsheet that holds the label records  */
-extern char **spreadsheet;
-extern int spreadsheet_cap;
-extern int spreadsheet_row_number;
 
 
 /**
@@ -207,6 +202,19 @@ typedef struct {
 
 } Column_header;
 
+// global variable labels holds the labels records
+extern Label_record **labels;
+
+/** Keeps track of the number of records in labels          */
+extern int labels_len;
+
+/** The total capacity of the records array               */
+extern int labels_cap;
+
+int labels_init();
+
+void labels_free();
+
 /**
 
 */
@@ -216,7 +224,7 @@ char* stristr( const char* str1, const char* str2 );
 
 /**
  */
-int populate_record(FILE *fpin, Label_record *lp, Column_header *cols);
+int populate_records(FILE *fpin, Column_header *cols);
 bool is_matrec(char *str);
 
 #endif //LABEL_H

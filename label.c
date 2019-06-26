@@ -8,7 +8,72 @@
 #include <ctype.h>
 #include "label.h"
 
-// the long string              long
+
+/**
+    This function initializes the dynamically allocated Label_records structure.
+    @return 0 if successful, -1 if unsuccessful.
+*/
+int labels_init() {
+
+    // tracks labels Label_records structure capacity
+    labels_cap = LABELS_INIT_SIZE;
+
+    // one time only - dynamically allocate some pointers to Label_records
+    if ((labels = (Label_record **) malloc(labels_cap * sizeof(Label_record *))) == NULL)
+        return -1;
+
+    return 0;
+}
+
+/**
+    This function doubles the size of the dynamically allocated labels pointer array.
+    @return 0 if successful, -1 if unsuccessful.
+*/
+static int labels_expand() {
+
+    labels_cap *= 2;
+    if ((labels = (Label_record **)realloc(labels, labels_cap * sizeof(Label_record*))) == NULL)
+        return -1;
+    else
+        return 0;
+}
+
+/**
+    This function frees the dynamically allocated labels structure.
+    @return 0 if successful, -1 if unsuccessful.
+*/
+void labels_free() {
+
+    for (int i = 0; i < labels_len; i++)
+        free(labels[i]);
+
+    free(labels);
+}
+
+/**
+    This function dynamically allocates memory for a new labels record and copies
+    the temporary Label_record built from the IDoc records into the labels array.
+    @param newlabel contains the new label to add to the labels array
+    @return 0 if successful, -1 if unsuccessful.
+*/
+int labels_append(Label_record *newlabel) {
+
+    // obtain memory for the new new label
+    if ((labels[labels_len] = (Label_record *)malloc(sizeof(Label_record))) == NULL)
+        return -1;
+
+    strcpy(labels[labels_len]->material, newlabel->material);
+    strcpy(labels[labels_len]->label, newlabel->label);
+    labels[labels_len]->tdline = newlabel->tdline;
+
+    // expand labels structure as needed
+    if (labels_len >= labels_cap) {
+        if (!labels_expand() == 0)
+            return -1;
+    }
+    return 0;
+}
+
 char *stristr(const char *str1, const char *str2) {
     const char *p1 = str1;
     const char *p2 = str2;
@@ -105,7 +170,10 @@ Column_header readheader(char *str) {
 
 }
 
-int populate_record(FILE *fpin, Label_record *lp, Column_header *cols) {
+int populate_records(FILE *fpin, Column_header *cols) {
+
+    // a temporary label that is populated before being added to the labels array
+    Label_record lbl = {0};
 
     char str[MAX_CHARS];
     char tdline_tmp[TDLINE_LEN] = {0};
@@ -126,16 +194,24 @@ int populate_record(FILE *fpin, Label_record *lp, Column_header *cols) {
 
     // get the first matnr record
     fgets(str, MAX_CHARS, fpin);
+
+    // allocate memory for the Column headings label_record
+    labels[labels_len++] = (Label_record *)malloc(sizeof(Label_record));
+
+    // allocate memory for the first label_record corresponding to row 1
+    labels[labels_len] = (Label_record *)malloc(sizeof(Label_record));
+
     if (is_matrec(str)) {
-        // get the seq_num associated with this matnr record
+
+        // get the matnr record seq_num
         strncpy(seq_num, str + MATNR_SEQ_NUM_START, SEQ_NUM_LEN);
         seq_num[SEQ_NUM_LEN] = '\0';
         matl_seq_num = atoi(seq_num);
 
         cp = str + LABEL_START;
-        strncpy(lp->material, cp, LRG);
-        rtrim(lp->material);
-        strcpy(current_matnr, lp->material);
+        strncpy(lbl.material, cp, LRG);
+        rtrim(lbl.material);
+        strcpy(current_matnr, lbl.material);
 
     } else {
         printf("Missing material number record on line 2 of IDoc. Aborting\n");
@@ -153,9 +229,9 @@ int populate_record(FILE *fpin, Label_record *lp, Column_header *cols) {
 
             if (labl_seq_num == matl_seq_num) {
                 cp = str + LABEL_START;
-                strncpy(lp->label, cp, SML);
-                lp->label[SML - 1] = '\0';
-                strcpy(current_label, lp->label);
+                strncpy(lbl.label, cp, SML);
+                lbl.label[SML - 1] = '\0';
+                strcpy(current_label, lbl.label);
             } else {
                 printf("Label sequence number %d doesn't match matnr sequence number. Aborting\n", labl_seq_num);
                 return -1;
@@ -182,13 +258,13 @@ int populate_record(FILE *fpin, Label_record *lp, Column_header *cols) {
                     // determine whether we're creating or appending tdline
                     if (cur_tdline_len > 0) {
                         //appending to an existing tdline
-                        lp->tdline = (char *) realloc(lp->tdline, strlen(tdline_tmp) + cur_tdline_len + 1);
-                        strcat(lp->tdline, tdline_tmp);
+                        lbl.tdline = (char *) realloc(lbl.tdline, strlen(tdline_tmp) + cur_tdline_len + 1);
+                        strcat(lbl.tdline, tdline_tmp);
                         cur_tdline_len += strlen(tdline_tmp);
                     } else {
                         //creating the first line of a tdline
-                        lp->tdline = (char *) malloc(strlen(tdline_tmp) + 1);
-                        strcpy(lp->tdline, tdline_tmp);
+                        lbl.tdline = (char *) malloc(strlen(tdline_tmp) + 1);
+                        strcpy(lbl.tdline, tdline_tmp);
                         cur_tdline_len = strlen(tdline_tmp);
                     }
                 } else {
@@ -198,7 +274,10 @@ int populate_record(FILE *fpin, Label_record *lp, Column_header *cols) {
             }
         }
         // descr record
-        //if (is_descrec(str))
+        if (is_descrec(str)) {
+
+        }
     }
+    labels_append(&lbl);
     return 0;
 }
