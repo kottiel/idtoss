@@ -31,10 +31,19 @@
 
 #define MAX_COLUMNS          1000
 #define TDLINE_LEN            131
+#define SEQ_NUM_LEN             6
 #define MED                    30
 #define LRG                    41
 #define SML                    10
 #define MATERIAL_REC          "02"
+
+/* the column that the matnr seq number begins*/
+#define MATNR_SEQ_NUM_START    49
+
+/* the column that a non-matnr seq number begins*/
+#define GNRIC_SEQ_NUM_START    55
+
+
 #define LABEL_REC             "03"
 #define TDLINE_REC            "04"
 #define CHAR_REC              "04"
@@ -207,7 +216,7 @@ char* stristr( const char* str1, const char* str2 );
 
 /**
  */
-int populate(FILE *fpin, Label_record *lp, Column_header *cols);
+int populate_record(FILE *fpin, Label_record *lp, Column_header *cols);
 bool is_matrec(char *str);
 
 #endif //LABEL_H

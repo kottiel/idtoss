@@ -48,13 +48,17 @@ int main(int argc, char *argv[])
     }
     fpout = fopen(textfile, "w");
 
+    // allocate memory for exactly one label record (spreadsheet row)
     labels[line] = (Label_record *)calloc (1, sizeof(Label_record));
-    if (!populate(fpin, labels[line], &columns) == 0) {
+
+    // populate the previously allocated memory with a label record
+    if (!populate_record(fpin, labels[line], &columns) == 0) {
         printf("Error occurred on line %d of input file.\n", line);
         EXIT_FAILURE;
     }
     printf("%s\n", labels[line]->material);
     printf("%s\n", labels[line]->label);
+    printf("%s\n", labels[line]->tdline);
 
 // read the file, building a columns instance
 //
@@ -62,7 +66,7 @@ int main(int argc, char *argv[])
 // labels array instance that contains the contents of the idoc file
 // write a tab-delimited spreadsheet based on the columns and labels
 // structs.
-    free(labels[0]);
+    free(labels[line]);
     free(textfile);
     fclose(fpout);
     fclose(fpin);

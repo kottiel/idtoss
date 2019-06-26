@@ -48,7 +48,7 @@ char *stristr(const char *str1, const char *str2) {
  */
 int ltrim(char *str) {
 
-    int str_length = (int)strlen(str);
+    int str_length = (int) strlen(str);
     if (str == NULL || str_length == 0)
         return 0;
 
@@ -67,7 +67,7 @@ int ltrim(char *str) {
  */
 int rtrim(char *str) {
 
-    int str_length = (int)strlen(str);
+    int str_length = (int) strlen(str);
     if (str == NULL || str_length == 0)
         return 0;
 
@@ -101,26 +101,37 @@ bool is_descrec(char *str) {
 }
 
 
-
 Column_header readheader(char *str) {
 
 }
 
-int populate(FILE *fpin, Label_record *lp, Column_header *cols) {
+int populate_record(FILE *fpin, Label_record *lp, Column_header *cols) {
 
     char str[MAX_CHARS];
     char tdline_tmp[TDLINE_LEN] = {0};
+    char seq_num[SEQ_NUM_LEN];
     char *cp;
     char current_matnr[LRG] = {0};
     char current_label[SML] = {0};
+
+    int cur_tdline_len = 0;
+
+    int matl_seq_num = 0;
+    int labl_seq_num = 0;
+    int tdln_seq_num = 0;
+    int desc_seq_num = 0;
 
     // discard the IDoc header record
     fgets(str, MAX_CHARS, fpin);
 
     // get the first matnr record
     fgets(str, MAX_CHARS, fpin);
-
     if (is_matrec(str)) {
+        // get the seq_num associated with this matnr record
+        strncpy(seq_num, str + MATNR_SEQ_NUM_START, SEQ_NUM_LEN);
+        seq_num[SEQ_NUM_LEN] = '\0';
+        matl_seq_num = atoi(seq_num);
+
         cp = str + LABEL_START;
         strncpy(lp->material, cp, LRG);
         rtrim(lp->material);
@@ -135,33 +146,55 @@ int populate(FILE *fpin, Label_record *lp, Column_header *cols) {
 
         // label record
         if (is_lblrec(str)) {
-            cp = str + LABEL_START;
-            strncpy(lp->label, cp, SML);
-            lp->label[SML-1] = '\0';
-            strcpy(current_label, lp->label);
+            // get the seq_num associated with this label record
+            strncpy(seq_num, str + GNRIC_SEQ_NUM_START, SEQ_NUM_LEN);
+            seq_num[6] = '\0';
+            labl_seq_num = atoi(seq_num);
+
+            if (labl_seq_num == matl_seq_num) {
+                cp = str + LABEL_START;
+                strncpy(lp->label, cp, SML);
+                lp->label[SML - 1] = '\0';
+                strcpy(current_label, lp->label);
+            } else {
+                printf("Label sequence number %d doesn't match matnr sequence number. Aborting\n", labl_seq_num);
+                return -1;
+            }
         }
 
         // tdline record
         if (is_tdlinerec(str)) {
-            int cur_size;
             if (strncmp(current_label, str + LABEL_CODE_START, 9) != 0) {
                 printf("Label number mismatch on TDLINE record of IDoc. Aborting\n");
                 return -1;
             } else {
-                cp = str + TDLINE_START;
-                strncpy(tdline_tmp, cp, TDLINE_LEN - 1);
-                ltrim(tdline_tmp);
-                rtrim(tdline_tmp);
+                // get the seq_num associated with this tdline record
+                strncpy(seq_num, str + GNRIC_SEQ_NUM_START, SEQ_NUM_LEN);
+                seq_num[6] = '\0';
+                tdln_seq_num = atoi(seq_num);
 
-                // determine whether we're creating or appending tdline
+                if (labl_seq_num == matl_seq_num) {
+                    cp = str + TDLINE_START;
+                    strncpy(tdline_tmp, cp, TDLINE_LEN - 1);
+                    ltrim(tdline_tmp);
+                    rtrim(tdline_tmp);
 
-                if (tdline_tmp) {
-                    if (lp->tdline)
-                        cur_size = strlen(lp->tdline);
-                    lp->tdline = realloc(lp->tdline, (int) strlen(tdline_tmp) + cur_size);
-                    strcat(lp->tdline, tdline_tmp);
+                    // determine whether we're creating or appending tdline
+                    if (cur_tdline_len > 0) {
+                        //appending to an existing tdline
+                        lp->tdline = (char *) realloc(lp->tdline, strlen(tdline_tmp) + cur_tdline_len + 1);
+                        strcat(lp->tdline, tdline_tmp);
+                        cur_tdline_len += strlen(tdline_tmp);
+                    } else {
+                        //creating the first line of a tdline
+                        lp->tdline = (char *) malloc(strlen(tdline_tmp) + 1);
+                        strcpy(lp->tdline, tdline_tmp);
+                        cur_tdline_len = strlen(tdline_tmp);
+                    }
+                } else {
+                    printf("TDline sequence number mismatch on TDLINE record of IDoc. Aborting\n");
+                    return -1;
                 }
-
             }
         }
         // descr record
