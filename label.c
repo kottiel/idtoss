@@ -142,25 +142,28 @@ int populate(FILE *fpin, Label_record *lp, Column_header *cols) {
         }
 
         // tdline record
-        if (is_tdlinerec(str))
+        if (is_tdlinerec(str)) {
+            int cur_size;
             if (strncmp(current_label, str + LABEL_CODE_START, 9) != 0) {
                 printf("Label number mismatch on TDLINE record of IDoc. Aborting\n");
                 return -1;
             } else {
                 cp = str + TDLINE_START;
-                strncpy(tdline_tmp, cp, TDLINE_LEN);
+                strncpy(tdline_tmp, cp, TDLINE_LEN - 1);
                 ltrim(tdline_tmp);
                 rtrim(tdline_tmp);
 
                 // determine whether we're creating or appending tdline
+
                 if (tdline_tmp) {
-                    int cur_size = strlen(lp->tdline);
+                    if (lp->tdline)
+                        cur_size = strlen(lp->tdline);
                     lp->tdline = realloc(lp->tdline, (int) strlen(tdline_tmp) + cur_size);
                     strcat(lp->tdline, tdline_tmp);
                 }
 
             }
-
+        }
         // descr record
         //if (is_descrec(str))
     }

@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     }
     fpout = fopen(textfile, "w");
 
-    labels[line] = (Label_record *)malloc(sizeof(Label_record));
+    labels[line] = (Label_record *)calloc (1, sizeof(Label_record));
     if (!populate(fpin, labels[line], &columns) == 0) {
         printf("Error occurred on line %d of input file.\n", line);
         EXIT_FAILURE;
