@@ -31,6 +31,10 @@ void usage() {
     fprintf(stderr, "Usage: idtoss <idocfile.txt>\n");
 }
 
+int col_headings(Column_header *cols) {
+
+}
+
 /**
  * Starting point for idtoss. Process command line argument, then
  * process IDoc file.
@@ -94,7 +98,11 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
+    // print column headings
+    col_headings(&columns);
+
     // test results
+    printf("%d record(s) created\n", labels_len);
     printf("%s\n", labels[labels_len]->material);
     printf("%s\n", labels[labels_len]->label);
     printf("%s\n", labels[labels_len]->tdline);

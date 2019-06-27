@@ -59,7 +59,7 @@ void labels_free() {
 int labels_append(Label_record *newlabel) {
 
     // obtain memory for the new new label
-    if ((labels[labels_len] = (Label_record *)malloc(sizeof(Label_record))) == NULL)
+    if ((labels[++labels_len] = (Label_record *)malloc(sizeof(Label_record))) == NULL)
         return -1;
 
     strcpy(labels[labels_len]->material, newlabel->material);
@@ -74,11 +74,13 @@ int labels_append(Label_record *newlabel) {
     return 0;
 }
 
+
+
 /**
  * search a string for the existence of a substr - case insensitive.
  * @param str1 is the string that is being searched
  * @param str2 is the substring that we're searching for
- * @return the position of the
+ * @return the position of the substr in the search string or 0 if it does not exist
  */
 char *stristr(const char *str1, const char *str2) {
     const char *p1 = str1;
@@ -90,8 +92,8 @@ char *stristr(const char *str1, const char *str2) {
             if (r == 0) {
                 r = p1;
             }
-
             p2++;
+
         } else {
             p2 = str2;
             if (r != 0) {
@@ -186,11 +188,12 @@ bool is_descrec(char *str) {
     return (strncmp(str, DESCR, 6) == 0);
 }
 
-
-Column_header readheader(char *str) {
-
-}
-
+/**
+ * Read through the entire IDoc input file and build an array of Label_records
+ * @param fpin is the IDoc input file
+ * @param cols is a struct that contains column headings
+ * @return 0 if successfully processed or -1 if there was an error
+ */
 int populate_records(FILE *fpin, Column_header *cols) {
 
     // a temporary label that is populated before being added to the labels array
@@ -215,13 +218,6 @@ int populate_records(FILE *fpin, Column_header *cols) {
 
     // get the first matnr record
     fgets(str, MAX_CHARS, fpin);
-
-    // allocate memory for the Column headings label_record
-    labels[labels_len++] = (Label_record *)malloc(sizeof(Label_record));
-
-    // allocate memory for the first label_record corresponding to row 1
-    labels[labels_len] = (Label_record *)malloc(sizeof(Label_record));
-
     if (is_matrec(str)) {
 
         // get the matnr record seq_num
@@ -233,6 +229,9 @@ int populate_records(FILE *fpin, Column_header *cols) {
         strncpy(lbl.material, cp, LRG);
         rtrim(lbl.material);
         strcpy(current_matnr, lbl.material);
+
+        // add material to the cols column headings struct
+        cols->material = true;
 
     } else {
         printf("Missing material number record on line 2 of IDoc. Aborting\n");
@@ -253,6 +252,10 @@ int populate_records(FILE *fpin, Column_header *cols) {
                 strncpy(lbl.label, cp, SML);
                 lbl.label[SML - 1] = '\0';
                 strcpy(current_label, lbl.label);
+
+                // add label to the cols column headings struct
+                cols->label = true;
+
             } else {
                 printf("Label sequence number %d doesn't match matnr sequence number. Aborting\n", labl_seq_num);
                 return -1;
@@ -288,6 +291,10 @@ int populate_records(FILE *fpin, Column_header *cols) {
                         strcpy(lbl.tdline, tdline_tmp);
                         cur_tdline_len = strlen(tdline_tmp);
                     }
+
+                    // add tdline to the cols column headings struct
+                    cols->tdline = true;
+
                 } else {
                     printf("TDline sequence number mismatch on TDLINE record of IDoc. Aborting\n");
                     return -1;
@@ -299,6 +306,7 @@ int populate_records(FILE *fpin, Column_header *cols) {
 
         }
     }
+
     labels_append(&lbl);
     return 0;
 }
