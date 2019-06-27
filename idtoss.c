@@ -31,10 +31,22 @@ void usage() {
     fprintf(stderr, "Usage: idtoss <idocfile.txt>\n");
 }
 
-int col_headings(Column_header *cols) {
-
+int col_headings(FILE *fpout, Column_header *cols) {
+    if (cols->label)          fprintf(fpout, "%s", "LABEL");
+    if (cols->material)       fprintf(fpout, "%s", "\tMATERIAL");
+    if (cols->tdline)         fprintf(fpout, "%s", "\tTDLINE");
+    if (cols->templatenumber) fprintf(fpout, "%s", "\tTEMPLATENUMBER");
 }
 
+print_records(FILE *fpout) {
+    for (int i = 1; i <= labels_len; i++) {
+        fprintf(fpout, "\n");
+        fprintf(fpout, "%s",    labels[i]->label);
+        fprintf(fpout, "\t%s",  labels[i]->material);
+        if (labels[i]->tdline)   fprintf(fpout, "\t%s", labels[i]->tdline);
+        if (labels[i]->template) fprintf(fpout, "\t%s", labels[i]->template);
+    }
+}
 /**
  * Starting point for idtoss. Process command line argument, then
  * process IDoc file.
@@ -99,13 +111,11 @@ int main(int argc, char *argv[]) {
     }
 
     // print column headings
-    col_headings(&columns);
+    col_headings(fpout, &columns);
 
-    // test results
-    printf("%d record(s) created\n", labels_len);
-    printf("%s\n", labels[labels_len]->material);
-    printf("%s\n", labels[labels_len]->label);
-    printf("%s\n", labels[labels_len]->tdline);
+    // print label records
+    printf("%d record(s) written to %s\n", labels_len, textfile);
+    print_records(fpout);
 
     // free dynamically allocated memory
     labels_free();

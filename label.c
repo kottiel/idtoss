@@ -32,7 +32,7 @@ int labels_init() {
 static int labels_expand() {
 
     labels_cap *= 2;
-    if ((labels = (Label_record **)realloc(labels, labels_cap * sizeof(Label_record*))) == NULL)
+    if ((labels = (Label_record **) realloc(labels, labels_cap * sizeof(Label_record *))) == NULL)
         return -1;
     else
         return 0;
@@ -44,7 +44,7 @@ static int labels_expand() {
 */
 void labels_free() {
 
-    for (int i = 0; i < labels_len; i++)
+    for (int i = 1; i <= labels_len; i++)
         free(labels[i]);
 
     free(labels);
@@ -59,21 +59,21 @@ void labels_free() {
 int labels_append(Label_record *newlabel) {
 
     // obtain memory for the new new label
-    if ((labels[++labels_len] = (Label_record *)malloc(sizeof(Label_record))) == NULL)
+    if ((labels[++labels_len] = (Label_record *) malloc(sizeof(Label_record))) == NULL)
         return -1;
 
     strcpy(labels[labels_len]->material, newlabel->material);
     strcpy(labels[labels_len]->label, newlabel->label);
     labels[labels_len]->tdline = newlabel->tdline;
+    strcpy(labels[labels_len]->template, newlabel->template);
 
     // expand labels structure as needed
-    if (labels_len >= labels_cap) {
+    if (labels_len >= labels_cap - 1) {
         if (!labels_expand() == 0)
             return -1;
     }
     return 0;
 }
-
 
 
 /**
@@ -188,6 +188,14 @@ bool is_descrec(char *str) {
     return (strncmp(str, DESCR, 6) == 0);
 }
 
+int parse_descr(char *name, Label_record *lbl, char *value, Column_header *cols) {
+
+    if (strcmp(name, "TEMPLATENUMBER") == 0) {
+        cols->templatenumber = true;
+        strcpy(lbl->template, value);
+    }
+}
+
 /**
  * Read through the entire IDoc input file and build an array of Label_records
  * @param fpin is the IDoc input file
@@ -198,9 +206,15 @@ int populate_records(FILE *fpin, Column_header *cols) {
 
     // a temporary label that is populated before being added to the labels array
     Label_record lbl = {0};
+    Label_record emptylbl = {0};
 
     char str[MAX_CHARS];
     char tdline_tmp[TDLINE_LEN] = {0};
+
+    char desc_col_name[MED + 1] = {0};
+    char desc_value[MED + 1] = {0};
+    char desc_graphic[MED + 1] = {0};
+
     char seq_num[SEQ_NUM_LEN];
     char *cp;
     char current_matnr[LRG] = {0};
@@ -209,45 +223,65 @@ int populate_records(FILE *fpin, Column_header *cols) {
     int cur_tdline_len = 0;
 
     int matl_seq_num = 0;
-    int labl_seq_num = 0;
+    int prim_label_seq_num = 0;
+    int sec_label_seq_num = 0;
     int tdln_seq_num = 0;
     int desc_seq_num = 0;
 
     // discard the IDoc header record
     fgets(str, MAX_CHARS, fpin);
 
-    // get the first matnr record
-    fgets(str, MAX_CHARS, fpin);
-    if (is_matrec(str)) {
+    while (fgets(str, MAX_CHARS, fpin) != NULL) {
 
-        // get the matnr record seq_num
-        strncpy(seq_num, str + MATNR_SEQ_NUM_START, SEQ_NUM_LEN);
-        seq_num[SEQ_NUM_LEN] = '\0';
-        matl_seq_num = atoi(seq_num);
+        // matnr record
+        if (is_matrec(str)) {
+            if (strlen(lbl.label) == LABEL_LEN) {
 
-        cp = str + LABEL_START;
-        strncpy(lbl.material, cp, LRG);
-        rtrim(lbl.material);
-        strcpy(current_matnr, lbl.material);
+                // if the previous record didn't have a dedicated matnr record
+                strcpy(lbl.material, current_matnr);
 
-        // add material to the cols column headings struct
-        cols->material = true;
+                labels_append(&lbl);
+                lbl = emptylbl;
+                cur_tdline_len = 0;
+            }
 
-    } else {
-        printf("Missing material number record on line 2 of IDoc. Aborting\n");
-        return -1;
-    }
+            // get the matnr record seq_num
+            strncpy(seq_num, str + PRIMARY_SEQ_NUM_START, SEQ_NUM_LEN);
+            seq_num[SEQ_NUM_LEN] = '\0';
+            matl_seq_num = atoi(seq_num);
 
-    while ((fgets(str, MAX_CHARS, fpin) != NULL) && (!is_matrec(str))) {
+            cp = str + LABEL_START;
+            strncpy(lbl.material, cp, LRG);
+            rtrim(lbl.material);
+            strcpy(current_matnr, lbl.material);
+
+            // add material to the cols column headings struct
+            cols->material = true;
+        }
 
         // label record
         if (is_lblrec(str)) {
-            // get the seq_num associated with this label record
-            strncpy(seq_num, str + GNRIC_SEQ_NUM_START, SEQ_NUM_LEN);
-            seq_num[6] = '\0';
-            labl_seq_num = atoi(seq_num);
+            if (strlen(lbl.label) == LABEL_LEN) {
 
-            if (labl_seq_num == matl_seq_num) {
+                // if the previous record didn't have a dedicated matnr record
+                strcpy(lbl.material, current_matnr);
+
+                labels_append(&lbl);
+                lbl = emptylbl;
+                cur_tdline_len = 0;
+            }
+
+            // get the primary seq_num associated with this label record
+            strncpy(seq_num, str + PRIMARY_SEQ_NUM_START, SEQ_NUM_LEN);
+            seq_num[SEQ_NUM_LEN] = '\0';
+            prim_label_seq_num = atoi(seq_num);
+
+            // get the secondary seq_num associated with this label record
+            strncpy(seq_num, str + SECONDARY_SEQ_NUM_START, SEQ_NUM_LEN);
+            seq_num[SEQ_NUM_LEN] = '\0';
+            sec_label_seq_num = atoi(seq_num);
+
+            if (sec_label_seq_num == matl_seq_num) {
                 cp = str + LABEL_START;
                 strncpy(lbl.label, cp, SML);
                 lbl.label[SML - 1] = '\0';
@@ -257,23 +291,24 @@ int populate_records(FILE *fpin, Column_header *cols) {
                 cols->label = true;
 
             } else {
-                printf("Label sequence number %d doesn't match matnr sequence number. Aborting\n", labl_seq_num);
+                printf("Label sequence number %d doesn't match matnr sequence number.", sec_label_seq_num);
+                printf("Aborting\n");
                 return -1;
             }
         }
 
         // tdline record
         if (is_tdlinerec(str)) {
-            if (strncmp(current_label, str + LABEL_CODE_START, 9) != 0) {
+            if (strncmp(current_label, str + LABEL_CODE_START, LABEL_LEN) != 0) {
                 printf("Label number mismatch on TDLINE record of IDoc. Aborting\n");
                 return -1;
             } else {
                 // get the seq_num associated with this tdline record
-                strncpy(seq_num, str + GNRIC_SEQ_NUM_START, SEQ_NUM_LEN);
-                seq_num[6] = '\0';
+                strncpy(seq_num, str + SECONDARY_SEQ_NUM_START, SEQ_NUM_LEN);
+                seq_num[SEQ_NUM_LEN] = '\0';
                 tdln_seq_num = atoi(seq_num);
 
-                if (labl_seq_num == matl_seq_num) {
+                if (tdln_seq_num == prim_label_seq_num) {
                     cp = str + TDLINE_START;
                     strncpy(tdline_tmp, cp, TDLINE_LEN - 1);
                     ltrim(tdline_tmp);
@@ -304,9 +339,38 @@ int populate_records(FILE *fpin, Column_header *cols) {
         // descr record
         if (is_descrec(str)) {
 
+            // get the seq_num associated with this descr record
+            strncpy(seq_num, str + SECONDARY_SEQ_NUM_START, SEQ_NUM_LEN);
+            seq_num[SEQ_NUM_LEN] = '\0';
+            desc_seq_num = atoi(seq_num);
+
+            if (desc_seq_num == prim_label_seq_num) {
+
+                // get descr column name
+                cp = str + DESC_COL_START;
+                strncpy(desc_col_name, cp, MED);
+                ltrim(desc_col_name);
+                rtrim(desc_col_name);
+
+                // get desc value
+                cp = str + DESCR_VAL_START;
+                strncpy(desc_value, cp, MED);
+                ltrim(desc_value);
+                rtrim(desc_value);
+
+                parse_descr(desc_col_name, &lbl, desc_value, cols);
+
+            } else {
+                printf("Descr sequence number mismatch on descr record of IDoc. Aborting\n");
+                return -1;
+            }
         }
     }
+    // if the previous record didn't have a dedicated matnr record
+    strcpy(lbl.material, current_matnr);
 
+    // print the last record
     labels_append(&lbl);
+
     return 0;
 }

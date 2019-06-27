@@ -18,38 +18,36 @@
 #include <stdbool.h>
 
 /** Number of rules initially in policy          */
-#define LABELS_INIT_SIZE                 5
-#define MAX_CHARS                      526
-#define MAX_FILENAMELEN                 31
-#define MATNR                      "Z2BTMH"
-#define LABEL                      "Z2BTLH"
-#define TDLINE                     "Z2BTTX"
-#define DESCR                      "Z2BTLC"
-#define LABEL_START                     63
-#define LABEL_CODE_START                82
-#define TDLINE_START                    92
+#define LABELS_INIT_SIZE         5
+#define MAX_CHARS                526
+#define MAX_FILENAMELEN          31
+#define MATNR                    "Z2BTMH"
+#define LABEL                    "Z2BTLH"
+#define TDLINE                   "Z2BTTX"
+#define DESCR                    "Z2BTLC"
+#define LABEL_START              63
+#define DESC_COL_START           63
+#define LABEL_CODE_START         82
+#define TDLINE_START             92
+#define DESCR_VAL_START          93
+#define DESCR_GRAPHIC_START      173
 
-#define MAX_COLUMNS          1000
-#define TDLINE_LEN            131
-#define SEQ_NUM_LEN             6
-#define MED                    30
-#define LRG                    41
-#define SML                    10
-#define MATERIAL_REC          "02"
+#define MAX_COLUMNS              1000
+#define LABEL_LEN                9
+#define TDLINE_LEN               131
+#define SEQ_NUM_LEN              6
+#define MED                      30
+#define LRG                      41
+#define SML                      10
+#define MATERIAL_REC             "02"
 
 /* the column that the matnr seq number begins*/
-#define MATNR_SEQ_NUM_START    49
+#define PRIMARY_SEQ_NUM_START    49
 
 /* the column that a non-matnr seq number begins*/
-#define GNRIC_SEQ_NUM_START    55
+#define SECONDARY_SEQ_NUM_START  55
 
-
-#define LABEL_REC             "03"
-#define TDLINE_REC            "04"
-#define CHAR_REC              "04"
-
-
-#define TAB                  '\t'
+#define TAB                      '\t'
 
 
 /**
