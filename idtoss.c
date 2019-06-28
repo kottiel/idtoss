@@ -32,19 +32,31 @@ void usage() {
 }
 
 int col_headings(FILE *fpout, Column_header *cols) {
-    if (cols->label)          fprintf(fpout, "%s", "LABEL");
-    if (cols->material)       fprintf(fpout, "%s", "\tMATERIAL");
-    if (cols->tdline)         fprintf(fpout, "%s", "\tTDLINE");
-    if (cols->templatenumber) fprintf(fpout, "%s", "\tTEMPLATENUMBER");
+
+    if (cols->label)           fprintf(fpout, "%s", "LABEL");
+    if (cols->material)        fprintf(fpout, "%s", "\tMATERIAL");
+    if (cols->tdline)          fprintf(fpout, "%s", "\tTDLINE");
+    if (cols->templatenumber)  fprintf(fpout, "%s", "\tTEMPLATENUMBER");
+    if (cols->revision)        fprintf(fpout, "%s", "\tREV");
+
+    return 0;
 }
 
-print_records(FILE *fpout) {
+void print_field(FILE *fpout, char *value) {
+    fprintf(fpout, "\t");
+    if (value)
+        fprintf(fpout, "%s", value);
+}
+
+void print_records(FILE *fpout, Column_header *cols) {
     for (int i = 1; i <= labels_len; i++) {
         fprintf(fpout, "\n");
         fprintf(fpout, "%s",    labels[i]->label);
         fprintf(fpout, "\t%s",  labels[i]->material);
-        if (labels[i]->tdline)   fprintf(fpout, "\t%s", labels[i]->tdline);
-        if (labels[i]->template) fprintf(fpout, "\t%s", labels[i]->template);
+
+        if (cols->tdline)         print_field(fpout, labels[i]->tdline);
+        if (cols->templatenumber) print_field(fpout, labels[i]->template);
+        if (cols->revision)       print_field(fpout, labels[i]->revision);
     }
 }
 /**
@@ -115,7 +127,7 @@ int main(int argc, char *argv[]) {
 
     // print label records
     printf("%d record(s) written to %s\n", labels_len, textfile);
-    print_records(fpout);
+    print_records(fpout, &columns);
 
     // free dynamically allocated memory
     labels_free();

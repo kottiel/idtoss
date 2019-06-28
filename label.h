@@ -209,6 +209,8 @@ extern int labels_len;
 /** The total capacity of the records array               */
 extern int labels_cap;
 
+size_t strlcpy(char *dst, const char *src, size_t dsize);
+
 int labels_init();
 
 void labels_free();

@@ -6,8 +6,53 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/types.h>
 #include "label.h"
 
+/*
+ * Copyright (c) 1998, 2015 Todd C. Miller <millert@openbsd.org>
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+/*
+ * Copy string src to buffer dst of size dsize.  At most dsize-1
+ * chars will be copied.  Always NUL terminates (unless dsize == 0).
+ * Returns strlen(src); if retval >= dsize, truncation occurred.
+ */
+size_t strlcpy(char *dst, const char *src, size_t dsize)
+{
+    const char *osrc = src;
+    size_t nleft = dsize;
+
+    /* Copy as many bytes as will fit. */
+    if (nleft != 0) {
+        while (--nleft != 0) {
+            if ((*dst++ = *src++) == '\0')
+                break;
+        }
+    }
+
+    /* Not enough room in dst, add NUL and traverse rest of src. */
+    if (nleft == 0) {
+        if (dsize != 0)
+            *dst = '\0';		/* NUL-terminate dst */
+        while (*src++)
+            ;
+    }
+
+    return(src - osrc - 1);	/* count does not include NUL */
+}
 
 /**
     This function initializes the dynamically allocated Label_records structure.
@@ -62,14 +107,15 @@ int labels_append(Label_record *newlabel) {
     if ((labels[++labels_len] = (Label_record *) malloc(sizeof(Label_record))) == NULL)
         return -1;
 
-    strcpy(labels[labels_len]->material, newlabel->material);
-    strcpy(labels[labels_len]->label, newlabel->label);
+    strlcpy(labels[labels_len]->material, newlabel->material, sizeof(labels[labels_len]->material));
+    strlcpy(labels[labels_len]->label,    newlabel->label,       sizeof(labels[labels_len]->label));
     labels[labels_len]->tdline = newlabel->tdline;
-    strcpy(labels[labels_len]->template, newlabel->template);
+    strlcpy(labels[labels_len]->template, newlabel->template, sizeof(labels[labels_len]->template));
+    strlcpy(labels[labels_len]->revision, newlabel->revision, sizeof(labels[labels_len]->revision));
 
     // expand labels structure as needed
     if (labels_len >= labels_cap - 1) {
-        if (!labels_expand() == 0)
+        if (labels_expand() != 0)
             return -1;
     }
     return 0;
@@ -192,8 +238,16 @@ int parse_descr(char *name, Label_record *lbl, char *value, Column_header *cols)
 
     if (strcmp(name, "TEMPLATENUMBER") == 0) {
         cols->templatenumber = true;
-        strcpy(lbl->template, value);
+        strlcpy(lbl->template, value, sizeof(lbl->template));
     }
+
+    if (strcmp(name, "REVISION") == 0) {
+        cols->revision = true;
+        strlcpy(lbl->revision, value, sizeof(lbl->revision));
+    }
+
+
+    return 0;
 }
 
 /**
@@ -215,7 +269,7 @@ int populate_records(FILE *fpin, Column_header *cols) {
     char desc_value[MED + 1] = {0};
     char desc_graphic[MED + 1] = {0};
 
-    char seq_num[SEQ_NUM_LEN];
+    char seq_num[SEQ_NUM_LEN + 1];
     char *cp;
     char current_matnr[LRG] = {0};
     char current_label[SML] = {0};
@@ -248,6 +302,7 @@ int populate_records(FILE *fpin, Column_header *cols) {
             // get the matnr record seq_num
             strncpy(seq_num, str + PRIMARY_SEQ_NUM_START, SEQ_NUM_LEN);
             seq_num[SEQ_NUM_LEN] = '\0';
+
             matl_seq_num = atoi(seq_num);
 
             cp = str + LABEL_START;
