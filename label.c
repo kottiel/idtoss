@@ -104,14 +104,24 @@ void labels_free() {
 int labels_append(Label_record *newlabel) {
 
     // obtain memory for the new new label
-    if ((labels[++labels_len] = (Label_record *) malloc(sizeof(Label_record))) == NULL)
+    if ((labels[++labels_len] = (Label_record *) calloc(1, sizeof(Label_record))) == NULL)
         return -1;
 
-    strlcpy(labels[labels_len]->material, newlabel->material, sizeof(labels[labels_len]->material));
-    strlcpy(labels[labels_len]->label,    newlabel->label,       sizeof(labels[labels_len]->label));
+    strlcpy(labels[labels_len]->material,   newlabel->material, sizeof(labels[labels_len]->material));
+    strlcpy(labels[labels_len]->label,      newlabel->label,    sizeof(labels[labels_len]->label));
+
     labels[labels_len]->tdline = newlabel->tdline;
-    strlcpy(labels[labels_len]->template, newlabel->template, sizeof(labels[labels_len]->template));
-    strlcpy(labels[labels_len]->revision, newlabel->revision, sizeof(labels[labels_len]->revision));
+
+    strlcpy(labels[labels_len]->template,   newlabel->template,    sizeof(labels[labels_len]->template));
+    strlcpy(labels[labels_len]->revision,   newlabel->revision,    sizeof(labels[labels_len]->revision));
+    strlcpy(labels[labels_len]->size,       newlabel->size,        sizeof(labels[labels_len]->size));
+    strlcpy(labels[labels_len]->level,      newlabel->level,       sizeof(labels[labels_len]->level));
+    strlcpy(labels[labels_len]->quantity,   newlabel->quantity,    sizeof(labels[labels_len]->quantity));
+    strlcpy(labels[labels_len]->gtin,       newlabel->gtin,        sizeof(labels[labels_len]->gtin));
+    strlcpy(labels[labels_len]->ipn,        newlabel->ipn,         sizeof(labels[labels_len]->ipn));
+    strlcpy(labels[labels_len]->caution,    newlabel->caution,     sizeof(labels[labels_len]->caution));
+    strlcpy(labels[labels_len]->consultifu, newlabel->consultifu,  sizeof(labels[labels_len]->consultifu));
+
 
     // expand labels structure as needed
     if (labels_len >= labels_cap - 1) {
@@ -234,7 +244,7 @@ bool is_descrec(char *str) {
     return (strncmp(str, DESCR, 6) == 0);
 }
 
-int parse_descr(char *name, Label_record *lbl, char *value, Column_header *cols) {
+int parse_descr(char *name, Label_record *lbl, char *value, char *graphicname, Column_header *cols) {
 
     if (strcmp(name, "TEMPLATENUMBER") == 0) {
         cols->templatenumber = true;
@@ -246,7 +256,93 @@ int parse_descr(char *name, Label_record *lbl, char *value, Column_header *cols)
         strlcpy(lbl->revision, value, sizeof(lbl->revision));
     }
 
+    if (strcmp(name, "SIZE") == 0) {
+        cols->size = true;
+        strlcpy(lbl->size, value, sizeof(lbl->size));
+    }
 
+    if (strcmp(name, "LEVEL") == 0) {
+        cols->level = true;
+        strlcpy(lbl->level, value, sizeof(lbl->level));
+    }
+
+    if (strcmp(name, "QUANTITY") == 0) {
+        cols->quantity = true;
+        strlcpy(lbl->quantity, value, sizeof(lbl->quantity));
+    }
+
+    if (strcmp(name, "BARCODETEXT") == 0) {
+        cols->barcodetext = true;
+        strlcpy(lbl->gtin, value, sizeof(lbl->gtin));
+    }
+
+    if (strcmp(name, "LTNUMBER") == 0) {
+        cols->ltnumber = true;
+        strlcpy(lbl->ipn, value, sizeof(lbl->ipn));
+    }
+
+    if (strncmp(name, "GRAPHIC", 7) == 0) {
+
+        // determine which GRAPHICxx element is listed
+        if(stristr(graphicname, "Caution")) {
+            cols->caution = true;
+            strlcpy(lbl->caution, value, 2);
+        }
+        if(stristr(graphicname, "ConsultIFU")) {
+            cols->consultifu = true;
+            strlcpy(lbl->consultifu, value, 2);
+        }
+
+        /*if(stristr(graphicname, "Latex")) {
+            cols->latex = true;
+            strlcpy(lbl->latex, value, sizeof(lbl->latex));
+        }
+        if(stristr(graphicname, "DoNotUsePakDam")) {
+            cols->donotusedam = true;
+            strlcpy(lbl->donotusedamaged, value, sizeof(lbl->donotusedamaged));
+        }
+        if(stristr(graphicname, "Latex Free")) {
+            cols->latexfree = true;
+            strlcpy(lbl->latexfree, value, sizeof(lbl->latexfree));
+        }
+        if(stristr(graphicname, "ManInBox")) {
+            cols->maninbox = true;
+            strlcpy(lbl->maninbox, value, sizeof(lbl->maninbox));
+        }
+        if(stristr(graphicname, "DoNotRe-sterilize")) {
+            cols->noresterile = true;
+            strlcpy(lbl->noresterilize, value, sizeof(lbl->noresterilize));
+        }
+        if(stristr(graphicname, "Non-sterile")) {
+            cols->nonsterile = true;
+            strlcpy(lbl->nonsterile, value, sizeof(lbl->nonsterile));
+        }
+        if(stristr(graphicname, "PVC_Free")) {
+            cols->pvcfree = true;
+            strlcpy(lbl->pvcfree, value, sizeof(lbl->pvcfree));
+        }
+        if(stristr(graphicname, "REUSABLE")) {
+            cols->reusable = true;
+            strlcpy(lbl->reusable, value, sizeof(lbl->reusable));
+        }
+        if(stristr(graphicname, "SINGLEUSE")) {
+            cols->singleuse = true;
+            strlcpy(lbl->singleuseonly, value, sizeof(lbl->singleuseonly));
+        }
+        if(stristr(graphicname, "SINGLEPATIENUSE")) {
+            cols->singlepatientuse = true;
+            strlcpy(lbl->singlepatientuse, value, sizeof(lbl->singlepatientuse));
+        }
+        if(stristr(graphicname, "ElectroSurIFU")) {
+            cols->electroifu = true;
+            strlcpy(lbl->electroifu, value, sizeof(lbl->electroifu));
+        }
+        if(stristr(graphicname, "KeepDry")) {
+            cols->keepdry = true;
+            strlcpy(lbl->keepdry, value, sizeof(lbl->keepdry));
+        }*/
+
+    }
     return 0;
 }
 
@@ -263,6 +359,7 @@ int populate_records(FILE *fpin, Column_header *cols) {
     Label_record emptylbl = {0};
 
     char str[MAX_CHARS];
+    char pathngraphic[MAX_PATHNGRAPHIC];
     char tdline_tmp[TDLINE_LEN] = {0};
 
     char desc_col_name[MED + 1] = {0};
@@ -413,7 +510,15 @@ int populate_records(FILE *fpin, Column_header *cols) {
                 ltrim(desc_value);
                 rtrim(desc_value);
 
-                parse_descr(desc_col_name, &lbl, desc_value, cols);
+                // get desc GRAPHIC name (if applicable)
+                if (strncmp(desc_col_name, "GRAPHIC", 7) == 0) {
+
+                    cp = str + DESCR_GRAPHIC_START;
+                    strlcpy(pathngraphic, str + DESCR_GRAPHIC_START, sizeof(pathngraphic));
+                }
+
+
+                parse_descr(desc_col_name, &lbl, desc_value, pathngraphic, cols);
 
             } else {
                 printf("Descr sequence number mismatch on descr record of IDoc. Aborting\n");

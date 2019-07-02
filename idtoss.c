@@ -33,11 +33,30 @@ void usage() {
 
 int col_headings(FILE *fpout, Column_header *cols) {
 
-    if (cols->label)           fprintf(fpout, "%s", "LABEL");
-    if (cols->material)        fprintf(fpout, "%s", "\tMATERIAL");
-    if (cols->tdline)          fprintf(fpout, "%s", "\tTDLINE");
-    if (cols->templatenumber)  fprintf(fpout, "%s", "\tTEMPLATENUMBER");
-    if (cols->revision)        fprintf(fpout, "%s", "\tREV");
+    if (cols->label)            fprintf(fpout, "%s", "LABEL");
+    if (cols->material)         fprintf(fpout, "%s", "\tMATERIAL");
+    if (cols->tdline)           fprintf(fpout, "%s", "\tTDLINE");
+    if (cols->templatenumber)   fprintf(fpout, "%s", "\tTEMPLATENUMBER");
+    if (cols->revision)         fprintf(fpout, "%s", "\tREV");
+    if (cols->size)             fprintf(fpout, "%s", "\tSIZE");
+    if (cols->level)            fprintf(fpout, "%s", "\tLEVEL");
+    if (cols->quantity)         fprintf(fpout, "%s", "\tQUANTITY");
+    if (cols->barcodetext)      fprintf(fpout, "%s", "\tBARCODETEXT");
+    if (cols->ltnumber)         fprintf(fpout, "%s", "\tLTNUMBER");
+    if (cols->caution)          fprintf(fpout, "%s", "\tCAUTION");
+    if (cols->consultifu)       fprintf(fpout, "%s", "\tCONSULTIFU");
+    if (cols->latex)            fprintf(fpout, "%s", "\tCONTAINSLATEX");
+    if (cols->donotusedam)      fprintf(fpout, "%s", "\tDONOTUSEDAM");
+    if (cols->latexfree)        fprintf(fpout, "%s", "\tLATEXFREE");
+    if (cols->maninbox)         fprintf(fpout, "%s", "\tMANINBOX");
+    if (cols->noresterile)      fprintf(fpout, "%s", "\tNORESTERILE");
+    if (cols->nonsterile)       fprintf(fpout, "%s", "\tNONSTERILE");
+    if (cols->pvcfree)          fprintf(fpout, "%s", "\tPVCFREE");
+    if (cols->reusable)         fprintf(fpout, "%s", "\tREUSABLE");
+    if (cols->singleuse)        fprintf(fpout, "%s", "\tSINGLEUSE");
+    if (cols->singlepatientuse) fprintf(fpout, "%s", "\tSINGLEPATIENUSE");
+    if (cols->electroifu)       fprintf(fpout, "%s", "\tELECTROSURIFU");
+    if (cols->keepdry)          fprintf(fpout, "%s", "\tKEEPDRY");
 
     return 0;
 }
@@ -51,12 +70,35 @@ void print_field(FILE *fpout, char *value) {
 void print_records(FILE *fpout, Column_header *cols) {
     for (int i = 1; i <= labels_len; i++) {
         fprintf(fpout, "\n");
-        fprintf(fpout, "%s",    labels[i]->label);
-        fprintf(fpout, "\t%s",  labels[i]->material);
+        fprintf(fpout, "%s",           labels[i]->label);
+        fprintf(fpout, "\t%s",         labels[i]->material);
+        if (cols->tdline)              print_field(fpout, labels[i]->tdline);
+        if (cols->templatenumber)      print_field(fpout, labels[i]->template);
+        if (cols->revision)            print_field(fpout, labels[i]->revision);
+        if (cols->size)                print_field(fpout, labels[i]->size);
+        if (cols->level)               print_field(fpout, labels[i]->level);
+        if (cols->quantity)            print_field(fpout, labels[i]->quantity);
+        if (cols->barcodetext)         print_field(fpout, labels[i]->gtin);
+        if (cols->ltnumber)            print_field(fpout, labels[i]->ipn);
+        if (cols->caution)             print_field(fpout, labels[i]->caution);
+        if (cols->consultifu)          print_field(fpout, labels[i]->consultifu);
 
-        if (cols->tdline)         print_field(fpout, labels[i]->tdline);
-        if (cols->templatenumber) print_field(fpout, labels[i]->template);
-        if (cols->revision)       print_field(fpout, labels[i]->revision);
+/*        if (cols->consultifu)       print_field(fpout, labels[i]->consultifu);
+        if (cols->latex)            print_field(fpout, labels[i]->latex);
+        if (cols->donotusedam)      print_field(fpout, labels[i]->donotusedamaged);
+        if (cols->latexfree)        print_field(fpout, labels[i]->latexfree);
+        if (cols->maninbox)         print_field(fpout, labels[i]->maninbox);
+        if (cols->noresterile)      print_field(fpout, labels[i]->noresterilize);
+        if (cols->nonsterile)       print_field(fpout, labels[i]->nonsterile);
+        if (cols->pvcfree)          print_field(fpout, labels[i]->pvcfree);
+        if (cols->reusable)         print_field(fpout, labels[i]->reusable);
+        if (cols->singleuse)        print_field(fpout, labels[i]->singleuseonly);
+        if (cols->singlepatientuse) print_field(fpout, labels[i]->singlepatientuse);
+        if (cols->electroifu)       print_field(fpout, labels[i]->electroifu);
+        if (cols->keepdry)          print_field(fpout, labels[i]->keepdry);*/
+
+
+
     }
 }
 /**

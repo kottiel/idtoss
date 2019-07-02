@@ -20,6 +20,7 @@
 /** Number of rules initially in policy          */
 #define LABELS_INIT_SIZE         5
 #define MAX_CHARS                526
+#define MAX_PATHNGRAPHIC         80
 #define MAX_FILENAMELEN          31
 #define MATNR                    "Z2BTMH"
 #define LABEL                    "Z2BTLH"
@@ -90,40 +91,42 @@ typedef struct {
     char label[10];
     char ipn[10];
     char quantity[LRG];
-    char template[8];
+    char template[MED];
     char bomlevel[5];
     char revision[4];
     char *tdline;
 
-    bool caution;
-    bool consultifu;
-    bool donotusedamaged;
+    char caution[2];
+    char consultifu[2];
+    char donotusedamaged[2];
+    char latex[2];
+    char latexfree[2];
+    char maninbox[2];
+    char nonsterile[2];
+    char noresterilize[2];
+    char pvcfree[2];
+    char reusable[2];
+    char singlepatientuse[2];
+    char singleuseonly[2];
+
     bool ecrep;
     bool electroifu;
     bool expdate;
-    bool keepdry;
     bool keepawayheat;
-    bool latex;
-    bool latexfree;
+    bool keepdry;
     bool lotgraphic;
-    bool maninbox;
     bool manufacturer;
     bool mfgdate;
-    bool nonsterile;
-    bool noresterilize;
     bool phtbbp;
-    bool phtdinp;
     bool phtdehp;
-    bool pvcfree;
+    bool phtdinp;
     bool ref;
     bool refnumber;
-    bool reusable;
+    bool rxonly;
     bool serial;
     bool sizelogo;
-    bool rxonly;
-    bool singlepatientuse;
-    bool singleuseonly;
     bool tfxlogo;
+
 } Label_record;
 
 /**
