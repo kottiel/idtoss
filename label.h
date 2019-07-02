@@ -31,7 +31,7 @@
 #define LABEL_CODE_START         82
 #define TDLINE_START             92
 #define DESCR_VAL_START          93
-#define DESCR_GRAPHIC_START      173
+#define DESCR_GRAPHIC_START      123
 
 #define MAX_COLUMNS              1000
 #define LABEL_LEN                9
@@ -87,7 +87,7 @@ typedef struct {
     char temperaturerange[MED];
     char version[MED];
     char gtin[15];
-    char level[11];
+    char level[15];
     char label[10];
     char ipn[10];
     char quantity[LRG];
@@ -96,18 +96,18 @@ typedef struct {
     char revision[4];
     char *tdline;
 
-    char caution[2];
-    char consultifu[2];
-    char donotusedamaged[2];
-    char latex[2];
-    char latexfree[2];
-    char maninbox[2];
-    char nonsterile[2];
-    char noresterilize[2];
-    char pvcfree[2];
-    char reusable[2];
-    char singlepatientuse[2];
-    char singleuseonly[2];
+    bool caution;
+    bool consultifu;
+    bool donotusedamaged;
+    bool latex;
+    bool latexfree;
+    bool maninbox;
+    bool nonsterile;
+    bool noresterilize;
+    bool pvcfree;
+    bool reusable;
+    bool singlepatientuse;
+    bool singleuseonly;
 
     bool ecrep;
     bool electroifu;

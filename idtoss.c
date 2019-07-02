@@ -37,7 +37,7 @@ int col_headings(FILE *fpout, Column_header *cols) {
     if (cols->material)         fprintf(fpout, "%s", "\tMATERIAL");
     if (cols->tdline)           fprintf(fpout, "%s", "\tTDLINE");
     if (cols->templatenumber)   fprintf(fpout, "%s", "\tTEMPLATENUMBER");
-    if (cols->revision)         fprintf(fpout, "%s", "\tREV");
+    if (cols->revision)         fprintf(fpout, "%s", "\tREVISION");
     if (cols->size)             fprintf(fpout, "%s", "\tSIZE");
     if (cols->level)            fprintf(fpout, "%s", "\tLEVEL");
     if (cols->quantity)         fprintf(fpout, "%s", "\tQUANTITY");
@@ -57,6 +57,51 @@ int col_headings(FILE *fpout, Column_header *cols) {
     if (cols->singlepatientuse) fprintf(fpout, "%s", "\tSINGLEPATIENUSE");
     if (cols->electroifu)       fprintf(fpout, "%s", "\tELECTROSURIFU");
     if (cols->keepdry)          fprintf(fpout, "%s", "\tKEEPDRY");
+    if (cols->expdate)          fprintf(fpout, "%s", "\tEXPDATE");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->ecrep)            fprintf(fpout, "%s", "\tECREP");
+    if (cols->keepawayheat)     fprintf(fpout, "%s", "\tKEEPAWAYHEAT");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tMANUFACTURER");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tMFGDATE");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tPHTDEHP");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tPHTBBP");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tPHTDINP");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+
+
+
 
     return 0;
 }
@@ -80,22 +125,97 @@ void print_records(FILE *fpout, Column_header *cols) {
         if (cols->quantity)            print_field(fpout, labels[i]->quantity);
         if (cols->barcodetext)         print_field(fpout, labels[i]->gtin);
         if (cols->ltnumber)            print_field(fpout, labels[i]->ipn);
-        if (cols->caution)             print_field(fpout, labels[i]->caution);
-        if (cols->consultifu)          print_field(fpout, labels[i]->consultifu);
 
-/*        if (cols->consultifu)       print_field(fpout, labels[i]->consultifu);
-        if (cols->latex)            print_field(fpout, labels[i]->latex);
-        if (cols->donotusedam)      print_field(fpout, labels[i]->donotusedamaged);
-        if (cols->latexfree)        print_field(fpout, labels[i]->latexfree);
-        if (cols->maninbox)         print_field(fpout, labels[i]->maninbox);
-        if (cols->noresterile)      print_field(fpout, labels[i]->noresterilize);
-        if (cols->nonsterile)       print_field(fpout, labels[i]->nonsterile);
-        if (cols->pvcfree)          print_field(fpout, labels[i]->pvcfree);
-        if (cols->reusable)         print_field(fpout, labels[i]->reusable);
-        if (cols->singleuse)        print_field(fpout, labels[i]->singleuseonly);
-        if (cols->singlepatientuse) print_field(fpout, labels[i]->singlepatientuse);
-        if (cols->electroifu)       print_field(fpout, labels[i]->electroifu);
-        if (cols->keepdry)          print_field(fpout, labels[i]->keepdry);*/
+        if (cols->caution)
+            if (labels[i]->caution)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->consultifu)
+            if (labels[i]->consultifu)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->latex)
+            if (labels[i]->latex)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->donotusedam)
+            if (labels[i]->donotusedamaged)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->latexfree)
+            if (labels[i]->latexfree)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->maninbox)
+            if (labels[i]->maninbox)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->noresterile)
+            if (labels[i]->noresterilize)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->nonsterile)
+            if (labels[i]->nonsterile)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->pvcfree)
+            if (labels[i]->pvcfree)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->reusable)
+            if (labels[i]->reusable)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->singleuse)
+            if (labels[i]->singleuseonly)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->singlepatientuse)
+            if (labels[i]->singlepatientuse)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->electroifu)
+            if (labels[i]->electroifu)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->keepdry)
+            if (labels[i]->keepdry)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
+        if (cols->expdate)
+            if (labels[i]->expdate)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+
 
 
 
@@ -116,7 +236,7 @@ int main(int argc, char *argv[]) {
     char *textfile = (char *) malloc((int) strlen(argv[1]) * sizeof(char) + SUFFIX);
 
     // the spreadsheet column headings struct
-    Column_header columns;
+    Column_header columns = {0};
 
     // open the idoc file provided as a command line parameter
     if (argc != 2) {

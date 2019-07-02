@@ -119,8 +119,55 @@ int labels_append(Label_record *newlabel) {
     strlcpy(labels[labels_len]->quantity,   newlabel->quantity,    sizeof(labels[labels_len]->quantity));
     strlcpy(labels[labels_len]->gtin,       newlabel->gtin,        sizeof(labels[labels_len]->gtin));
     strlcpy(labels[labels_len]->ipn,        newlabel->ipn,         sizeof(labels[labels_len]->ipn));
-    strlcpy(labels[labels_len]->caution,    newlabel->caution,     sizeof(labels[labels_len]->caution));
-    strlcpy(labels[labels_len]->consultifu, newlabel->consultifu,  sizeof(labels[labels_len]->consultifu));
+
+    if (newlabel->caution)
+        labels[labels_len]->caution         = true;
+    if (newlabel->consultifu)
+        labels[labels_len]->consultifu       = true;
+    if (newlabel->consultifu)
+        labels[labels_len]->consultifu       = true;
+    if (newlabel->donotusedamaged)
+        labels[labels_len]->donotusedamaged  = true;
+    if (newlabel->latex)
+        labels[labels_len]->latex            = true;
+    if (newlabel->latexfree)
+        labels[labels_len]->latexfree = true;
+    if (newlabel->maninbox)
+        labels[labels_len]->maninbox         = true;
+    if (newlabel->nonsterile)
+        labels[labels_len]->nonsterile       = true;
+    if (newlabel->noresterilize)
+        labels[labels_len]->noresterilize    = true;
+    if (newlabel->pvcfree)
+        labels[labels_len]->pvcfree          = true;
+    if (newlabel->reusable)
+        labels[labels_len]->reusable         = true;
+    if (newlabel->singlepatientuse)
+        labels[labels_len]->singlepatientuse = true;
+    if (newlabel->singleuseonly)
+        labels[labels_len]->singleuseonly    = true;
+    if (newlabel->expdate)
+        labels[labels_len]->expdate          = true;
+    if (newlabel->lotgraphic)
+        labels[labels_len]->lotgraphic       = true;
+    if (newlabel->ecrep)
+        labels[labels_len]->ecrep            = true;
+    if (newlabel->keepawayheat)
+        labels[labels_len]->keepawayheat     = true;
+    if (newlabel->manufacturer)
+        labels[labels_len]->manufacturer     = true;
+    if (newlabel->mfgdate)
+        labels[labels_len]->mfgdate          = true;
+    if (newlabel->phtdehp)
+        labels[labels_len]->phtdehp          = true;
+    if (newlabel->phtbbp)
+        labels[labels_len]->phtbbp           = true;
+    if (newlabel->phtdinp)
+        labels[labels_len]->phtdinp          = true;
+    if (newlabel->refnumber)
+        labels[labels_len]->refnumber        = true;
+    if (newlabel->ref)
+        labels[labels_len]->ref              = true;
 
 
     // expand labels structure as needed
@@ -286,62 +333,52 @@ int parse_descr(char *name, Label_record *lbl, char *value, char *graphicname, C
         // determine which GRAPHICxx element is listed
         if(stristr(graphicname, "Caution")) {
             cols->caution = true;
-            strlcpy(lbl->caution, value, 2);
-        }
-        if(stristr(graphicname, "ConsultIFU")) {
+            lbl->caution = true;
+        } else if(stristr(graphicname, "ConsultIFU")) {
             cols->consultifu = true;
-            strlcpy(lbl->consultifu, value, 2);
-        }
-
-        /*if(stristr(graphicname, "Latex")) {
-            cols->latex = true;
-            strlcpy(lbl->latex, value, sizeof(lbl->latex));
-        }
-        if(stristr(graphicname, "DoNotUsePakDam")) {
-            cols->donotusedam = true;
-            strlcpy(lbl->donotusedamaged, value, sizeof(lbl->donotusedamaged));
-        }
-        if(stristr(graphicname, "Latex Free")) {
+            lbl->consultifu = true;
+        } else if(stristr(graphicname, "Latex Free")) {
             cols->latexfree = true;
-            strlcpy(lbl->latexfree, value, sizeof(lbl->latexfree));
-        }
-        if(stristr(graphicname, "ManInBox")) {
+            lbl->latexfree = true;
+        } else if(stristr(graphicname, "Latex")) {
+            cols->latex = true;
+            lbl->latex = true;
+        } else if(stristr(graphicname, "DoNotUsePakDam")) {
+            cols->donotusedam = true;
+            lbl->donotusedamaged = true;
+        } else if(stristr(graphicname, "ManInBox")) {
             cols->maninbox = true;
-            strlcpy(lbl->maninbox, value, sizeof(lbl->maninbox));
-        }
-        if(stristr(graphicname, "DoNotRe-sterilize")) {
+            lbl->maninbox = true;
+        } else if(stristr(graphicname, "DoNotRe-sterilize")) {
             cols->noresterile = true;
-            strlcpy(lbl->noresterilize, value, sizeof(lbl->noresterilize));
-        }
-        if(stristr(graphicname, "Non-sterile")) {
+            lbl->noresterilize = true;
+        } else if(stristr(graphicname, "Non-sterile")) {
             cols->nonsterile = true;
-            strlcpy(lbl->nonsterile, value, sizeof(lbl->nonsterile));
-        }
-        if(stristr(graphicname, "PVC_Free")) {
+            lbl->nonsterile = true;
+        } else if(stristr(graphicname, "PVC_Free")) {
             cols->pvcfree = true;
-            strlcpy(lbl->pvcfree, value, sizeof(lbl->pvcfree));
-        }
-        if(stristr(graphicname, "REUSABLE")) {
+            lbl->pvcfree = true;
+        } else if(stristr(graphicname, "REUSABLE")) {
             cols->reusable = true;
-            strlcpy(lbl->reusable, value, sizeof(lbl->reusable));
-        }
-        if(stristr(graphicname, "SINGLEUSE")) {
+            lbl->reusable = true;
+        } else if(stristr(graphicname, "SINGLEUSE")) {
             cols->singleuse = true;
-            strlcpy(lbl->singleuseonly, value, sizeof(lbl->singleuseonly));
-        }
-        if(stristr(graphicname, "SINGLEPATIENUSE")) {
+            lbl->singleuseonly = true;
+        } else if(stristr(graphicname, "SINGLEPATIENUSE")) {
             cols->singlepatientuse = true;
-            strlcpy(lbl->singlepatientuse, value, sizeof(lbl->singlepatientuse));
-        }
-        if(stristr(graphicname, "ElectroSurIFU")) {
+            lbl->singlepatientuse = true;
+        } else if(stristr(graphicname, "ElectroSurIFU")) {
             cols->electroifu = true;
-            strlcpy(lbl->electroifu, value, sizeof(lbl->electroifu));
-        }
-        if(stristr(graphicname, "KeepDry")) {
+            lbl->electroifu = true;
+        } else if(stristr(graphicname, "KeepDry")) {
             cols->keepdry = true;
-            strlcpy(lbl->keepdry, value, sizeof(lbl->keepdry));
-        }*/
+            lbl->keepdry = true;
+        }
 
+        if (strcmp(name, "EXPDATE") == 0) {
+            cols->expdate = true;
+            lbl->expdate = true;
+        }
     }
     return 0;
 }
