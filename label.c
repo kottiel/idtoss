@@ -107,8 +107,8 @@ int labels_append(Label_record *newlabel) {
     if ((labels[++labels_len] = (Label_record *) calloc(1, sizeof(Label_record))) == NULL)
         return -1;
 
-    strlcpy(labels[labels_len]->material,   newlabel->material, sizeof(labels[labels_len]->material));
-    strlcpy(labels[labels_len]->label,      newlabel->label,    sizeof(labels[labels_len]->label));
+    strlcpy(labels[labels_len]->material,   newlabel->material,    sizeof(labels[labels_len]->material));
+    strlcpy(labels[labels_len]->label,      newlabel->label,       sizeof(labels[labels_len]->label));
 
     labels[labels_len]->tdline = newlabel->tdline;
 
@@ -121,7 +121,7 @@ int labels_append(Label_record *newlabel) {
     strlcpy(labels[labels_len]->ipn,        newlabel->ipn,         sizeof(labels[labels_len]->ipn));
 
     if (newlabel->caution)
-        labels[labels_len]->caution         = true;
+        labels[labels_len]->caution          = true;
     if (newlabel->consultifu)
         labels[labels_len]->consultifu       = true;
     if (newlabel->consultifu)
@@ -131,7 +131,7 @@ int labels_append(Label_record *newlabel) {
     if (newlabel->latex)
         labels[labels_len]->latex            = true;
     if (newlabel->latexfree)
-        labels[labels_len]->latexfree = true;
+        labels[labels_len]->latexfree        = true;
     if (newlabel->maninbox)
         labels[labels_len]->maninbox         = true;
     if (newlabel->nonsterile)
@@ -168,7 +168,42 @@ int labels_append(Label_record *newlabel) {
         labels[labels_len]->refnumber        = true;
     if (newlabel->ref)
         labels[labels_len]->ref              = true;
+    if (newlabel->rxonly)
+        labels[labels_len]->rxonly           = true;
+    if (newlabel->serial)
+        labels[labels_len]->serial           = true;
+    if (newlabel->sizelogo)
+        labels[labels_len]->sizelogo         = true;
+    if (newlabel->tfxlogo)
+        labels[labels_len]->tfxlogo          = true;
 
+    strlcpy(labels[labels_len]->address,            newlabel->address,            sizeof(labels[labels_len]->address));
+    strlcpy(labels[labels_len]->cautionstatement,   newlabel->cautionstatement,   sizeof(labels[labels_len]->cautionstatement));
+    strlcpy(labels[labels_len]->cemark,             newlabel->cemark,             sizeof(labels[labels_len]->cemark));
+    strlcpy(labels[labels_len]->coostate,           newlabel->coostate,           sizeof(labels[labels_len]->coostate));
+    strlcpy(labels[labels_len]->distby,             newlabel->distby,             sizeof(labels[labels_len]->distby));
+    strlcpy(labels[labels_len]->ecrepaddress,       newlabel->ecrepaddress,       sizeof(labels[labels_len]->ecrepaddress));
+    strlcpy(labels[labels_len]->flgraphic,          newlabel->flgraphic,          sizeof(labels[labels_len]->flgraphic));
+    strlcpy(labels[labels_len]->labelgraph1,        newlabel->labelgraph1,        sizeof(labels[labels_len]->labelgraph1));
+    strlcpy(labels[labels_len]->labelgraph2,        newlabel->labelgraph2,        sizeof(labels[labels_len]->labelgraph2));
+    strlcpy(labels[labels_len]->latexstatement,     newlabel->latexstatement,     sizeof(labels[labels_len]->latexstatement));
+    strlcpy(labels[labels_len]->logo1,              newlabel->logo1,              sizeof(labels[labels_len]->logo1));
+    strlcpy(labels[labels_len]->logo2,              newlabel->logo2,              sizeof(labels[labels_len]->logo2));
+    strlcpy(labels[labels_len]->logo3,              newlabel->logo3,              sizeof(labels[labels_len]->logo3));
+    strlcpy(labels[labels_len]->logo4,              newlabel->logo4,              sizeof(labels[labels_len]->logo4));
+    strlcpy(labels[labels_len]->logo5,              newlabel->logo5,              sizeof(labels[labels_len]->logo5));
+    strlcpy(labels[labels_len]->manufacturedby,     newlabel->manufacturedby,     sizeof(labels[labels_len]->manufacturedby));
+    strlcpy(labels[labels_len]->patentstatement,    newlabel->patentstatement,    sizeof(labels[labels_len]->patentstatement));
+    strlcpy(labels[labels_len]->sterilitystatement, newlabel->sterilitystatement, sizeof(labels[labels_len]->sterilitystatement));
+    strlcpy(labels[labels_len]->sterilitytype,      newlabel->sterilitytype,      sizeof(labels[labels_len]->sterilitytype));
+    strlcpy(labels[labels_len]->version,            newlabel->version,            sizeof(labels[labels_len]->version));
+    strlcpy(labels[labels_len]->insertgraphic,      newlabel->insertgraphic,      sizeof(labels[labels_len]->insertgraphic));
+
+    strlcpy(labels[labels_len]->mdr1,               newlabel->mdr1,               sizeof(labels[labels_len]->mdr1));
+    strlcpy(labels[labels_len]->mdr2,               newlabel->mdr2,               sizeof(labels[labels_len]->mdr2));
+    strlcpy(labels[labels_len]->mdr3,               newlabel->mdr3,               sizeof(labels[labels_len]->mdr3));
+    strlcpy(labels[labels_len]->mdr4,               newlabel->mdr4,               sizeof(labels[labels_len]->mdr4));
+    strlcpy(labels[labels_len]->mdr5,               newlabel->mdr5,               sizeof(labels[labels_len]->mdr5));
 
     // expand labels structure as needed
     if (labels_len >= labels_cap - 1) {
@@ -297,90 +332,247 @@ int parse_descr(char *name, Label_record *lbl, char *value, char *graphicname, C
         cols->templatenumber = true;
         strlcpy(lbl->template, value, sizeof(lbl->template));
     }
-
     if (strcmp(name, "REVISION") == 0) {
         cols->revision = true;
         strlcpy(lbl->revision, value, sizeof(lbl->revision));
     }
-
     if (strcmp(name, "SIZE") == 0) {
         cols->size = true;
         strlcpy(lbl->size, value, sizeof(lbl->size));
     }
-
     if (strcmp(name, "LEVEL") == 0) {
         cols->level = true;
         strlcpy(lbl->level, value, sizeof(lbl->level));
     }
-
     if (strcmp(name, "QUANTITY") == 0) {
         cols->quantity = true;
         strlcpy(lbl->quantity, value, sizeof(lbl->quantity));
     }
-
     if (strcmp(name, "BARCODETEXT") == 0) {
         cols->barcodetext = true;
         strlcpy(lbl->gtin, value, sizeof(lbl->gtin));
     }
-
     if (strcmp(name, "LTNUMBER") == 0) {
         cols->ltnumber = true;
         strlcpy(lbl->ipn, value, sizeof(lbl->ipn));
     }
-
     if (strncmp(name, "GRAPHIC", 7) == 0) {
 
         // determine which GRAPHICxx element is listed
-        if(stristr(graphicname, "Caution")) {
+        if (stristr(graphicname, "Caution")) {
             cols->caution = true;
             lbl->caution = true;
-        } else if(stristr(graphicname, "ConsultIFU")) {
+        } else if (stristr(graphicname, "ConsultIFU")) {
             cols->consultifu = true;
             lbl->consultifu = true;
-        } else if(stristr(graphicname, "Latex Free")) {
+        } else if (stristr(graphicname, "Latex Free")) {
             cols->latexfree = true;
             lbl->latexfree = true;
-        } else if(stristr(graphicname, "Latex")) {
+        } else if (stristr(graphicname, "Latex")) {
             cols->latex = true;
             lbl->latex = true;
-        } else if(stristr(graphicname, "DoNotUsePakDam")) {
+        } else if (stristr(graphicname, "DoNotUsePakDam")) {
             cols->donotusedam = true;
             lbl->donotusedamaged = true;
-        } else if(stristr(graphicname, "ManInBox")) {
+        } else if (stristr(graphicname, "ManInBox")) {
             cols->maninbox = true;
             lbl->maninbox = true;
-        } else if(stristr(graphicname, "DoNotRe-sterilize")) {
+        } else if (stristr(graphicname, "DoNotRe-sterilize")) {
             cols->noresterile = true;
             lbl->noresterilize = true;
-        } else if(stristr(graphicname, "Non-sterile")) {
+        } else if (stristr(graphicname, "Non-sterile")) {
             cols->nonsterile = true;
             lbl->nonsterile = true;
-        } else if(stristr(graphicname, "PVC_Free")) {
+        } else if (stristr(graphicname, "PVC_Free")) {
             cols->pvcfree = true;
             lbl->pvcfree = true;
-        } else if(stristr(graphicname, "REUSABLE")) {
+        } else if (stristr(graphicname, "REUSABLE")) {
             cols->reusable = true;
             lbl->reusable = true;
-        } else if(stristr(graphicname, "SINGLEUSE")) {
+        } else if (stristr(graphicname, "SINGLEUSE")) {
             cols->singleuse = true;
             lbl->singleuseonly = true;
-        } else if(stristr(graphicname, "SINGLEPATIENUSE")) {
+        } else if (stristr(graphicname, "SINGLEPATIENUSE")) {
             cols->singlepatientuse = true;
             lbl->singlepatientuse = true;
-        } else if(stristr(graphicname, "ElectroSurIFU")) {
+        } else if (stristr(graphicname, "ElectroSurIFU")) {
             cols->electroifu = true;
             lbl->electroifu = true;
-        } else if(stristr(graphicname, "KeepDry")) {
+        } else if (stristr(graphicname, "KeepDry")) {
             cols->keepdry = true;
             lbl->keepdry = true;
         }
-
+    }
         if (strcmp(name, "EXPDATE") == 0) {
             cols->expdate = true;
             lbl->expdate = true;
         }
-    }
-    return 0;
+        if (strcmp(name, "LOTGRAPHIC") == 0) {
+            cols->lotgraphic = true;
+            lbl->lotgraphic = true;
+        }
+        if (strcmp(name, "ECREP") == 0) {
+            cols->ecrep = true;
+            lbl->ecrep = true;
+        }
+        if (strcmp(name, "KEEPAWAYHEAT") == 0) {
+            cols->keepawayheat = true;
+            lbl->keepawayheat = true;
+        }
+        if (strcmp(name, "MANUFACTURER") == 0) {
+            cols->manufacturer = true;
+            lbl->manufacturer = true;
+        }
+        if (strcmp(name, "MFGDATE") == 0) {
+            cols->mfgdate = true;
+            lbl->mfgdate = true;
+        }
+        if (strcmp(name, "PHTDEHP") == 0) {
+            cols->phtdehp = true;
+            lbl->phtdehp = true;
+        }
+        if (strcmp(name, "PHTBBP") == 0) {
+            cols->phtbbp = true;
+            lbl->phtbbp = true;
+        }
+        if (strcmp(name, "PHTDINP") == 0) {
+            cols->phtdinp = true;
+            lbl->phtdinp = true;
+        }
+        if (strcmp(name, "REFNUMBER") == 0) {
+            cols->refnumber = true;
+            lbl->refnumber = true;
+        }
+        if (strcmp(name, "REF") == 0) {
+            cols->ref = true;
+            lbl->ref = true;
+        }
+        if (strcmp(name, "RXONLY") == 0) {
+            cols->rxonly = true;
+            lbl->rxonly = true;
+        }
+        if (strcmp(name, "SERIAL") == 0) {
+            cols->serial = true;
+            lbl->serial = true;
+        }
+        if (strcmp(name, "SIZELOGO") == 0) {
+            cols->sizelogo = true;
+            lbl->sizelogo = true;
+        }
+        if (strcmp(name, "TFXLOGO") == 0) {
+            cols->tfxlogo = true;
+            lbl->tfxlogo = true;
+        }
+        if (strcmp(name, "PHTDINP") == 0) {
+            cols->phtdinp = true;
+            lbl->phtdinp = true;
+        }
+        if (strcmp(name, "ADDRESS") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "CAUTIONSTATE") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "CE0120") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "COOSTATE") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "DISTRIBUTEDBY") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "ECREPADDRESS") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "FLGRAPHIC") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "LABELGRAPH1") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "LABELGRAPH2") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "LATEXSTATEMENT") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "LOGO1") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "LOGO2") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "LOGO3") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "LOGO4") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "LOGO5") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "MANUFACTUREDBY") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "PATENTSTA") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "STERILESTA") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "STERILITYTYPE") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "VERSION") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "INSERTGRAPHIC") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "MDR1") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "MDR2") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "MDR3") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "MDR4") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        if (strcmp(name, "MDR5") == 0) {
+            cols->address = true;
+            strlcpy(lbl->address, value, sizeof(lbl->address));
+        }
+        return 0;
+
 }
 
 /**

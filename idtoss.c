@@ -33,72 +33,73 @@ void usage() {
 
 int col_headings(FILE *fpout, Column_header *cols) {
 
-    if (cols->label)            fprintf(fpout, "%s", "LABEL");
-    if (cols->material)         fprintf(fpout, "%s", "\tMATERIAL");
-    if (cols->tdline)           fprintf(fpout, "%s", "\tTDLINE");
-    if (cols->templatenumber)   fprintf(fpout, "%s", "\tTEMPLATENUMBER");
-    if (cols->revision)         fprintf(fpout, "%s", "\tREVISION");
-    if (cols->size)             fprintf(fpout, "%s", "\tSIZE");
-    if (cols->level)            fprintf(fpout, "%s", "\tLEVEL");
-    if (cols->quantity)         fprintf(fpout, "%s", "\tQUANTITY");
-    if (cols->barcodetext)      fprintf(fpout, "%s", "\tBARCODETEXT");
-    if (cols->ltnumber)         fprintf(fpout, "%s", "\tLTNUMBER");
-    if (cols->caution)          fprintf(fpout, "%s", "\tCAUTION");
-    if (cols->consultifu)       fprintf(fpout, "%s", "\tCONSULTIFU");
-    if (cols->latex)            fprintf(fpout, "%s", "\tCONTAINSLATEX");
-    if (cols->donotusedam)      fprintf(fpout, "%s", "\tDONOTUSEDAM");
-    if (cols->latexfree)        fprintf(fpout, "%s", "\tLATEXFREE");
-    if (cols->maninbox)         fprintf(fpout, "%s", "\tMANINBOX");
-    if (cols->noresterile)      fprintf(fpout, "%s", "\tNORESTERILE");
-    if (cols->nonsterile)       fprintf(fpout, "%s", "\tNONSTERILE");
-    if (cols->pvcfree)          fprintf(fpout, "%s", "\tPVCFREE");
-    if (cols->reusable)         fprintf(fpout, "%s", "\tREUSABLE");
-    if (cols->singleuse)        fprintf(fpout, "%s", "\tSINGLEUSE");
-    if (cols->singlepatientuse) fprintf(fpout, "%s", "\tSINGLEPATIENUSE");
-    if (cols->electroifu)       fprintf(fpout, "%s", "\tELECTROSURIFU");
-    if (cols->keepdry)          fprintf(fpout, "%s", "\tKEEPDRY");
-    if (cols->expdate)          fprintf(fpout, "%s", "\tEXPDATE");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->ecrep)            fprintf(fpout, "%s", "\tECREP");
-    if (cols->keepawayheat)     fprintf(fpout, "%s", "\tKEEPAWAYHEAT");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tMANUFACTURER");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tMFGDATE");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tPHTDEHP");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tPHTBBP");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tPHTDINP");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
-    if (cols->lotgraphic)       fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->label)              fprintf(fpout, "%s", "LABEL");
+    if (cols->material)           fprintf(fpout, "%s", "\tMATERIAL");
+    if (cols->tdline)             fprintf(fpout, "%s", "\tTDLINE");
+    if (cols->templatenumber)     fprintf(fpout, "%s", "\tTEMPLATENUMBER");
+    if (cols->revision)           fprintf(fpout, "%s", "\tREVISION");
+    if (cols->size)               fprintf(fpout, "%s", "\tSIZE");
+    if (cols->level)              fprintf(fpout, "%s", "\tLEVEL");
+    if (cols->quantity)           fprintf(fpout, "%s", "\tQUANTITY");
+    if (cols->barcodetext)        fprintf(fpout, "%s", "\tBARCODETEXT");
+    if (cols->ltnumber)           fprintf(fpout, "%s", "\tLTNUMBER");
+    if (cols->caution)            fprintf(fpout, "%s", "\tCAUTION");
+    if (cols->consultifu)         fprintf(fpout, "%s", "\tCONSULTIFU");
+    if (cols->latex)              fprintf(fpout, "%s", "\tCONTAINSLATEX");
+    if (cols->donotusedam)        fprintf(fpout, "%s", "\tDONOTUSEDAM");
+    if (cols->latexfree)          fprintf(fpout, "%s", "\tLATEXFREE");
+    if (cols->maninbox)           fprintf(fpout, "%s", "\tMANINBOX");
+    if (cols->noresterile)        fprintf(fpout, "%s", "\tNORESTERILE");
+    if (cols->nonsterile)         fprintf(fpout, "%s", "\tNONSTERILE");
+    if (cols->pvcfree)            fprintf(fpout, "%s", "\tPVCFREE");
+    if (cols->reusable)           fprintf(fpout, "%s", "\tREUSABLE");
+    if (cols->singleuse)          fprintf(fpout, "%s", "\tSINGLEUSE");
+    if (cols->singlepatientuse)   fprintf(fpout, "%s", "\tSINGLEPATIENUSE");
+    if (cols->electroifu)         fprintf(fpout, "%s", "\tELECTROSURIFU");
+    if (cols->keepdry)            fprintf(fpout, "%s", "\tKEEPDRY");
+    if (cols->expdate)            fprintf(fpout, "%s", "\tEXPDATE");
+    if (cols->lotgraphic)         fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->ecrep)              fprintf(fpout, "%s", "\tECREP");
+    if (cols->keepawayheat)       fprintf(fpout, "%s", "\tKEEPAWAYHEAT");
+    if (cols->lotgraphic)         fprintf(fpout, "%s", "\tMANUFACTURER");
+    if (cols->lotgraphic)         fprintf(fpout, "%s", "\tMFGDATE");
+    if (cols->lotgraphic)         fprintf(fpout, "%s", "\tPHTDEHP");
+    if (cols->lotgraphic)         fprintf(fpout, "%s", "\tPHTBBP");
+    if (cols->lotgraphic)         fprintf(fpout, "%s", "\tPHTDINP");
+    if (cols->lotgraphic)         fprintf(fpout, "%s", "\tLOTGRAPHIC");
+    if (cols->refnumber)          fprintf(fpout, "%s", "\tREFNUMBER");
+    if (cols->ref)                fprintf(fpout, "%s", "\tREF");
+    if (cols->rxonly)             fprintf(fpout, "%s", "\tRXONLY");
+    if (cols->serial)             fprintf(fpout, "%s", "\tSERIAL");
+    if (cols->sizelogo)           fprintf(fpout, "%s", "\tSIZELOGO");
+    if (cols->tfxlogo)            fprintf(fpout, "%s", "\tTFXLOGO");
+    if (cols->address)            fprintf(fpout, "%s", "\tADDRESS");
+    if (cols->cautionstate)       fprintf(fpout, "%s", "\tCAUTIONSTATE");
+    if (cols->ce0120)             fprintf(fpout, "%s", "\tCE0120");
+    if (cols->coostate)           fprintf(fpout, "%s", "\tCOOSTATE");
+    if (cols->distby)             fprintf(fpout, "%s", "\tDISTRIBUTEDBY");
+    if (cols->ecrepaddress)       fprintf(fpout, "%s", "\tECREPADDRESS");
+    if (cols->flgraphic)          fprintf(fpout, "%s", "\tFLGRAPHIC");
+    if (cols->labelgraph1)        fprintf(fpout, "%s", "\tLABELGRAPH1");
+    if (cols->labelgraph2)        fprintf(fpout, "%s", "\tLABELGRAPH2");
+    if (cols->latexstate)         fprintf(fpout, "%s", "\tLATEXSTATEMENT");
+    if (cols->logo1)              fprintf(fpout, "%s", "\tLOGO1");
+    if (cols->logo2)              fprintf(fpout, "%s", "\tLOGO2");
+    if (cols->logo3)              fprintf(fpout, "%s", "\tLOGO3");
+    if (cols->logo4)              fprintf(fpout, "%s", "\tLOGO4");
+    if (cols->logo5)              fprintf(fpout, "%s", "\tLOGO5");
+    if (cols->manufacturedby)     fprintf(fpout, "%s", "\tMANUFACTUREDBY");
+    if (cols->patentstatement)    fprintf(fpout, "%s", "\tPATENTSTA");
+    if (cols->sterilitystatement) fprintf(fpout, "%s", "\tSTERILESTA");
+    if (cols->sterilitytype)      fprintf(fpout, "%s", "\tSTERILITYTYPE");
+    if (cols->version)            fprintf(fpout, "%s", "\tVERSION");
+    if (cols->insertgraphic)      fprintf(fpout, "%s", "\tINSERTGRAPHIC");
+    if (cols->mdr1)               fprintf(fpout, "%s", "\tMDR1");
+    if (cols->mdr2)               fprintf(fpout, "%s", "\tMDR2");
+    if (cols->mdr3)               fprintf(fpout, "%s", "\tMDR3");
+    if (cols->mdr4)               fprintf(fpout, "%s", "\tMDR4");
+    if (cols->mdr5)               fprintf(fpout, "%s", "\tMDR5");
+
 
 
 
@@ -216,9 +217,103 @@ void print_records(FILE *fpout, Column_header *cols) {
             else
                 print_field(fpout, "");
 
+        if (cols->lotgraphic)
+            if (labels[i]->lotgraphic)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->ecrep)
+            if (labels[i]->ecrep)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->keepawayheat)
+            if (labels[i]->keepawayheat)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->manufacturer)
+            if (labels[i]->manufacturer)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->mfgdate)
+            if (labels[i]->mfgdate)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->phtdehp)
+            if (labels[i]->phtdehp)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->phtbbp)
+            if (labels[i]->phtbbp)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->phtdinp)
+            if (labels[i]->phtdinp)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->refnumber)
+            if (labels[i]->refnumber)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->ref)
+            if (labels[i]->ref)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->rxonly)
+            if (labels[i]->rxonly)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->serial)
+            if (labels[i]->serial)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->sizelogo)
+            if (labels[i]->sizelogo)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
+        if (cols->tfxlogo)
+            if (labels[i]->tfxlogo)
+                print_field(fpout, "Y");
+            else
+                print_field(fpout, "");
 
-
-
+        if (cols->address)            print_field(fpout, labels[i]->address);
+        if (cols->cautionstate)       print_field(fpout, labels[i]->cautionstatement);
+        if (cols->ce0120)             print_field(fpout, labels[i]->cemark);
+        if (cols->coostate)           print_field(fpout, labels[i]->coostate);
+        if (cols->distby)             print_field(fpout, labels[i]->distby);
+        if (cols->ecrepaddress)       print_field(fpout, labels[i]->ecrepaddress);
+        if (cols->flgraphic)          print_field(fpout, labels[i]->flgraphic);
+        if (cols->labelgraph1)        print_field(fpout, labels[i]->labelgraph1);
+        if (cols->labelgraph2)        print_field(fpout, labels[i]->labelgraph2);
+        if (cols->latexstate)         print_field(fpout, labels[i]->latexstatement);
+        if (cols->logo1)              print_field(fpout, labels[i]->logo1);
+        if (cols->logo2)              print_field(fpout, labels[i]->logo2);
+        if (cols->logo3)              print_field(fpout, labels[i]->logo3);
+        if (cols->logo4)              print_field(fpout, labels[i]->logo4);
+        if (cols->logo5)              print_field(fpout, labels[i]->logo5);
+        if (cols->manufacturedby)     print_field(fpout, labels[i]->manufacturedby);
+        if (cols->patentstatement)    print_field(fpout, labels[i]->patentstatement);
+        if (cols->sterilitystatement) print_field(fpout, labels[i]->sterilitystatement);
+        if (cols->sterilitytype)      print_field(fpout, labels[i]->sterilitytype);
+        if (cols->version)            print_field(fpout, labels[i]->version);
+        if (cols->insertgraphic)      print_field(fpout, labels[i]->insertgraphic);
+        if (cols->mdr1)               print_field(fpout, labels[i]->mdr1);
+        if (cols->mdr2)               print_field(fpout, labels[i]->mdr2);
+        if (cols->mdr3)               print_field(fpout, labels[i]->mdr3);
+        if (cols->mdr4)               print_field(fpout, labels[i]->mdr4);
+        if (cols->mdr5)               print_field(fpout, labels[i]->mdr5);
     }
 }
 /**
