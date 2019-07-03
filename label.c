@@ -413,8 +413,12 @@ int parse_descr(char *name, Label_record *lbl, char *value, char *graphicname, C
         }
         if (strcmp(name, "ECREP") == 0) {
             cols->ecrep = true;
-            lbl->ecrep = true;
+            if (strncasecmp(value, "y", 1) == 0)
+                lbl->ecrep = true;
+            else
+                lbl->ecrep = false;
         }
+
         if (strcmp(name, "KEEPAWAYHEAT") == 0) {
             cols->keepawayheat = true;
             lbl->keepawayheat = true;
